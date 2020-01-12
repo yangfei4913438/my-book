@@ -1,0 +1,215 @@
+{
+  "name": "my-book",
+  "version": "0.1.1",
+  "private": true,
+  "description": "Online Markdown Editor using Qiniu cloud service",
+  "author": {
+    "name": "William Yang",
+    "email": "yangfei86@vip.qq.com"
+  },
+  "dependencies": {
+    "axios": "^0.19.1",
+    "electron-store": "^5.1.0",
+    "koa": "^2.11.0",
+    "koa-static": "^5.0.0",
+    "moment": "^2.24.0",
+    "qiniu": "^7.3.0"
+  },
+  "main": "main.js",
+  "scripts": {
+    "start": "node scripts/start.js",
+    "build": "node scripts/build.js ",
+    "test": "node scripts/test.js",
+    "dev": "concurrently \"wait-on http://localhost:3000 && electron .\" \"cross-env BROWSER=none yarn start\"",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "buildMain": "webpack",
+    "prepack": "npm run build && npm run buildMain",
+    "predist": "npm run build && npm run buildMain",
+    "release": "electron-builder",
+    "prerelease": "npm run build && npm run buildMain"
+  },
+  "homepage": "./",
+  "build": {
+    "appId": "my-book",
+    "productName": "我的云文档",
+    "copyright": "Copyright © 2019 ${author}",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "settings/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "extraMetadata": {
+      "main": "./build/main.js"
+    },
+    "publish": [
+      "github"
+    ],
+    "extends": null,
+    "mac": {
+      "category": "public.app-category.productivity",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "dmg": {
+      "background": "assets/appdmg.png",
+      "icon": "assets/icon.icns",
+      "iconSize": 100,
+      "contents": [
+        {
+          "x": 380,
+          "y": 280,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 110,
+          "y": 280,
+          "type": "file"
+        }
+      ],
+      "window": {
+        "width": 500,
+        "height": 500
+      }
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis-web",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "msi",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "artifactName": "${productName}-Web-Setup-${version}.${ext}",
+      "publisherName": "William Yang"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "runAfterFinish": false
+    }
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "7.7.7",
+    "@fortawesome/fontawesome-svg-core": "^1.2.26",
+    "@fortawesome/free-brands-svg-icons": "^5.12.0",
+    "@fortawesome/free-regular-svg-icons": "^5.12.0",
+    "@fortawesome/free-solid-svg-icons": "^5.12.0",
+    "@fortawesome/react-fontawesome": "^0.1.8",
+    "@svgr/webpack": "5.0.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^8.0.2",
+    "@typescript-eslint/eslint-plugin": "^2.13.0",
+    "@typescript-eslint/parser": "^2.13.0",
+    "antd": "^3.26.4",
+    "autoprefixer": "^9.7.3",
+    "babel-eslint": "10.0.3",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "8.0.6",
+    "babel-plugin-named-asset-import": "^0.3.5",
+    "babel-preset-react-app": "^9.1.0",
+    "camelcase": "^5.3.1",
+    "case-sensitive-paths-webpack-plugin": "2.2.0",
+    "concurrently": "^5.0.2",
+    "copy-webpack-plugin": "^5.1.1",
+    "cross-env": "^6.0.3",
+    "css-loader": "3.4.0",
+    "devtron": "^1.4.0",
+    "dotenv": "8.2.0",
+    "dotenv-expand": "5.1.0",
+    "electron": "^7.1.8",
+    "electron-builder": "^21.2.0",
+    "electron-is-dev": "^1.1.0",
+    "electron-updater": "^4.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-react-app": "^5.1.0",
+    "eslint-loader": "3.0.3",
+    "eslint-plugin-flowtype": "4.5.2",
+    "eslint-plugin-import": "2.19.1",
+    "eslint-plugin-jsx-a11y": "6.2.3",
+    "eslint-plugin-react": "7.17.0",
+    "eslint-plugin-react-hooks": "^2.3.0",
+    "file-loader": "5.0.2",
+    "fs-extra": "^8.1.0",
+    "github-markdown-css": "^3.0.1",
+    "html-webpack-plugin": "4.0.0-beta.5",
+    "identity-obj-proxy": "3.0.0",
+    "jest": "24.9.0",
+    "jest-environment-jsdom-fourteen": "1.0.1",
+    "jest-resolve": "24.9.0",
+    "jest-watch-typeahead": "0.4.2",
+    "jquery": "^3.4.1",
+    "jquery-ui": "^1.12.1",
+    "loadsh": "^0.0.4",
+    "markdown-it": "^10.0.0",
+    "mini-css-extract-plugin": "0.9.0",
+    "optimize-css-assets-webpack-plugin": "5.0.3",
+    "pnp-webpack-plugin": "1.5.0",
+    "postcss-flexbugs-fixes": "4.1.0",
+    "postcss-import": "^12.0.1",
+    "postcss-loader": "3.0.0",
+    "postcss-normalize": "8.0.1",
+    "postcss-preset-env": "6.7.0",
+    "postcss-safe-parser": "4.0.1",
+    "postcss-url": "^8.0.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.12.0",
+    "react-app-polyfill": "^1.0.5",
+    "react-dev-utils": "^10.0.0",
+    "react-dom": "^16.12.0",
+    "react-router-dom": "^5.1.2",
+    "react-simplemde-editor": "^4.1.0",
+    "resolve": "1.14.1",
+    "resolve-url-loader": "3.1.1",
+    "sass-loader": "8.0.0",
+    "semver": "7.1.1",
+    "style-loader": "1.1.1",
+    "stylus": "^0.54.7",
+    "stylus-loader": "^3.0.2",
+    "terser-webpack-plugin": "2.3.1",
+    "ts-pnp": "1.1.5",
+    "url-loader": "3.0.0",
+    "uuid": "^3.3.3",
+    "wait-on": "^3.3.0",
+    "webpack": "4.41.4",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "3.10.1",
+    "webpack-manifest-plugin": "2.2.0",
+    "workbox-webpack-plugin": "4.3.1"
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  }
+}

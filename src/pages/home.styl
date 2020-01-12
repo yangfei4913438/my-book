@@ -1,0 +1,72 @@
+layout()
+  position absolute
+  left 0
+  right 0
+  box-sizing border-box
+  overflow hidden
+
+getStyle(type)
+  if type == 'home'
+    layout()
+    top 0
+    bottom 0
+  if type == 'header'
+    layout()
+    top 0
+    height 50px
+    line-height 50px
+    padding 0 20px
+    background #e0e0e0
+    border-bottom 1px solid #ccc
+    display flex
+    justify-content space-between
+    align-items center
+  if type == 'body'
+    layout()
+    bottom 0
+    height calc(100% - 50px)
+    overflow scroll
+    background #fbfbfb
+    display flex
+
+.home
+  getStyle('home')
+
+.header
+  getStyle('header')
+
+.body
+  getStyle('body')
+
+$leftWidth = 280px
+
+.body-left
+  position relative
+  height 100%
+  width $leftWidth
+  min-width $leftWidth
+  border-right 1px solid #ccc
+  box-sizing border-box
+  overflow-x hidden
+  overflow-y scroll
+  background #fafafa
+  display flex
+  flex-direction column
+  text-align left
+.body-right
+  position relative
+  min-width 500px
+  height 100%
+  flex 1 // 权重比为1
+  box-sizing border-box
+  overflow scroll
+  text-align left
+
+.loading
+  z-index 9999
+  position relative
+  width 100%
+  height 100%
+  display flex
+  justify-content center
+  align-items center
