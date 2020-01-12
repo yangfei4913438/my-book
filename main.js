@@ -6,7 +6,7 @@ const Koa = require('koa')
 const KoaStatic = require('koa-static')
 const moment = require('moment')
 const { port } = require('./serverConfig')
-const { app, Menu, ipcMain, remote } = require('electron')
+const { app, Menu, ipcMain, dialog } = require('electron')
 const isDev = require('electron-is-dev')
 const { autoUpdater } = require('electron-updater')
 const menuTemplate = require('./src/menuTemplate')
@@ -34,6 +34,10 @@ function checkPort (port) {
     })
   })
 }
+// 获取可用端口
+const serverPort = async () => {
+  return await checkPort(port)
+}
 
 // 日志系统
 function log (content) {
@@ -43,24 +47,24 @@ function log (content) {
 
 // Electron 会在初始化后并准备
 // ready事件 表示electron已经加载了
-app.on('ready', async () => {
+app.on('ready', () => {
   log('=============================================')
   log('当前开发环境:' + isDev)
 
   // 生产环境运行前检查更新。
   // 关闭自动下载
   autoUpdater.autoDownload = false
-  // 检测更新
-  await autoUpdater.checkForUpdatesAndNotify()
+  // 检测更新，这里不要使用同步操作！！！
+  autoUpdater.checkForUpdatesAndNotify()
   // 检测错误
   autoUpdater.on('error', error => {
-    remote.dialog.showErrorBox('Error: ', error === null ? 'unknown' : (error.stack || error).toString())
+    dialog.showErrorBox('Error: ', error === null ? 'unknown' : (error.stack || error).toString())
   })
   autoUpdater.on('checking-for-update', () => {
-    console.log('Checking for update...');
+    log('Checking for update...');
   })
   autoUpdater.on('update-available', () => {
-    remote.dialog.showMessageBox({
+    dialog.showMessageBox({
       type: 'info',
       title: '应用有新的版本',
       message: '发现新版本，是否现在更新?',
@@ -72,20 +76,21 @@ app.on('ready', async () => {
     })
   })
   autoUpdater.on('update-not-available', () => {
-    remote.dialog.showMessageBox({
+    dialog.showMessageBox({
       title: '没有新版本',
       message: '当前已经是最新版本'
     })
   })
+  // 下载
   autoUpdater.on('download-progress', (progressObj) => {
     let log_message = "Download speed: " + progressObj.bytesPerSecond;
     log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
     log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
     console.log(log_message)
   })
-
+  //
   autoUpdater.on('update-downloaded', () => {
-    remote.dialog.showMessageBox({
+    dialog.showMessageBox({
       title: '安装更新',
       message: '更新下载完毕，应用将重启并进行安装'
     }, () => {
@@ -94,14 +99,13 @@ app.on('ready', async () => {
   })
 
   // 创建浏览器主窗口配置
+  const newPort = serverPort()
   const mainWindowConfig = {
     width: 1200,
     height: 680,
     title: app.name
   }
 
-  // 获取可用端口
-  const serverPort = await checkPort(port)
   let createWindow = {
     open: false
   }
@@ -111,12 +115,12 @@ app.on('ready', async () => {
       enumerable: false,
       set () {
         log("生产环境，开始加载app窗口。。。")
-        loadWindow(mainWindowConfig, serverPort)
+        loadWindow(mainWindowConfig, newPort)
       }
     })
   } else {
     log("开发环境，开始加载app窗口。。。")
-    loadWindow(mainWindowConfig, serverPort)
+    loadWindow(mainWindowConfig, newPort)
   }
   if (!isDev) {
     // 启动服务器
@@ -131,10 +135,10 @@ app.on('ready', async () => {
         ctx.body = 'fail no file!'
       }
     })
-    log(`正在启动服务器在${serverPort}端口`)
-    serve.listen(serverPort, () => {
+    log(`正在启动服务器在${newPort}端口`)
+    serve.listen(newPort, () => {
       createWindow.open = true
-      log(`serve is running at ${serverPort}...`)
+      log(`serve is running at ${newPort}...`)
     })
   }
 })
