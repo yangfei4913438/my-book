@@ -256,7 +256,7 @@ const Header = ({className, file, setFile, dirs, store, filterBody, setDirs, set
       <FontAwesomeIcon icon={faSync} style={{color: '#2c86ec', cursor: "pointer"}} onClick={syncFiles}/>
       <Input.Search
         ref={searchDom}
-        placeholder="请输入笔记标题或内容"
+        placeholder="请输入笔记的标题或内容"
         onSearch={handleChange}
         onChange={getUserInput}
         allowClear
