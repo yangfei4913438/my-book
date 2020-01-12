@@ -48,52 +48,50 @@ app.on('ready', async () => {
   log('当前开发环境:' + isDev)
 
   // 生产环境运行前检查更新。
-  if (!isDev) {
-    // 关闭自动下载
-    autoUpdater.autoDownload = false
-    // 检测更新
-    await autoUpdater.checkForUpdatesAndNotify()
-    // 检测错误
-    autoUpdater.on('error', error => {
-      remote.dialog.showErrorBox('Error: ', error === null ? 'unknown' : (error.stack || error).toString())
+  // 关闭自动下载
+  autoUpdater.autoDownload = false
+  // 检测更新
+  autoUpdater.checkForUpdatesAndNotify()
+  // 检测错误
+  autoUpdater.on('error', error => {
+    remote.dialog.showErrorBox('Error: ', error === null ? 'unknown' : (error.stack || error).toString())
+  })
+  autoUpdater.on('checking-for-update', () => {
+    console.log('Checking for update...');
+  })
+  autoUpdater.on('update-available', () => {
+    remote.dialog.showMessageBox({
+      type: 'info',
+      title: '应用有新的版本',
+      message: '发现新版本，是否现在更新?',
+      buttons: ['是', '否']
+    }, (buttonIndex) => {
+      if (buttonIndex === 0) {
+        autoUpdater.downloadUpdate()
+      }
     })
-    autoUpdater.on('checking-for-update', () => {
-      console.log('Checking for update...');
+  })
+  autoUpdater.on('update-not-available', () => {
+    remote.dialog.showMessageBox({
+      title: '没有新版本',
+      message: '当前已经是最新版本'
     })
-    autoUpdater.on('update-available', () => {
-      remote.dialog.showMessageBox({
-        type: 'info',
-        title: '应用有新的版本',
-        message: '发现新版本，是否现在更新?',
-        buttons: ['是', '否']
-      }, (buttonIndex) => {
-        if (buttonIndex === 0) {
-          autoUpdater.downloadUpdate()
-        }
-      })
-    })
-    autoUpdater.on('update-not-available', () => {
-      remote.dialog.showMessageBox({
-        title: '没有新版本',
-        message: '当前已经是最新版本'
-      })
-    })
-    autoUpdater.on('download-progress', (progressObj) => {
-      let log_message = "Download speed: " + progressObj.bytesPerSecond;
-      log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-      log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-      console.log(log_message)
-    })
+  })
+  autoUpdater.on('download-progress', (progressObj) => {
+    let log_message = "Download speed: " + progressObj.bytesPerSecond;
+    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+    log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+    console.log(log_message)
+  })
 
-    autoUpdater.on('update-downloaded', () => {
-      remote.dialog.showMessageBox({
-        title: '安装更新',
-        message: '更新下载完毕，应用将重启并进行安装'
-      }, () => {
-        setImmediate(() => autoUpdater.quitAndInstall())
-      })
+  autoUpdater.on('update-downloaded', () => {
+    remote.dialog.showMessageBox({
+      title: '安装更新',
+      message: '更新下载完毕，应用将重启并进行安装'
+    }, () => {
+      setImmediate(() => autoUpdater.quitAndInstall())
     })
-  }
+  })
 
   // 创建浏览器主窗口配置
   const mainWindowConfig = {
