@@ -34,11 +34,6 @@ function checkPort (port) {
     })
   })
 }
-// 获取可用端口
-const serverPort = async () => {
-  let res = await checkPort(port)
-  return res
-}
 
 // 日志系统
 function log (content) {
@@ -48,7 +43,7 @@ function log (content) {
 
 // Electron 会在初始化后并准备
 // ready事件 表示electron已经加载了
-app.on('ready', () => {
+app.on('ready', async () => {
   log('=============================================')
   log('当前开发环境:' + isDev)
 
@@ -99,8 +94,10 @@ app.on('ready', () => {
     })
   })
 
+  // 获取可用端口
+  const newPort = await checkPort(port)
+
   // 创建浏览器主窗口配置
-  const newPort = serverPort()
   const mainWindowConfig = {
     width: 1200,
     height: 680,
