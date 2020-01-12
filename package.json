@@ -1,6 +1,6 @@
 {
   "name": "my-book",
-  "version": "0.1.1",
+  "version": "0.0.1",
   "private": true,
   "description": "Online Markdown Editor using Qiniu cloud service",
   "author": {
