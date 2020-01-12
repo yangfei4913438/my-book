@@ -36,7 +36,8 @@ function checkPort (port) {
 }
 // 获取可用端口
 const serverPort = async () => {
-  return await checkPort(port)
+  let res = await checkPort(port)
+  return res
 }
 
 // 日志系统
