@@ -51,7 +51,7 @@ app.on('ready', async () => {
   // 关闭自动下载
   autoUpdater.autoDownload = false
   // 检测更新
-  autoUpdater.checkForUpdatesAndNotify()
+  await autoUpdater.checkForUpdatesAndNotify()
   // 检测错误
   autoUpdater.on('error', error => {
     remote.dialog.showErrorBox('Error: ', error === null ? 'unknown' : (error.stack || error).toString())
