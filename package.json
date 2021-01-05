@@ -8,7 +8,7 @@
     "email": "yangfei86@vip.qq.com"
   },
   "dependencies": {
-    "axios": "^0.19.1",
+    "axios": "^0.21.1",
     "electron-store": "^5.1.0",
     "koa": "^2.11.0",
     "koa-static": "^5.0.0",
